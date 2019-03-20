@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - DarkGreenDot
+  - GreenDot
+  - IndigoDot
+  - OrangeDot
+  - RedDot
+  - SalmonDot
+  - TealDot
+  - YellowDot
   layers:
   - Default
   - TransparentFX
