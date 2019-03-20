@@ -87,6 +87,10 @@ public class Dot : MonoBehaviour
                 column = previousColumn;
 
             }
+            else
+            {
+                board.DestroyMatches();
+            }
             otherDot = null;
         }
        
