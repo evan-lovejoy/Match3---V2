@@ -5,11 +5,15 @@ using UnityEngine;
 public class Dot : MonoBehaviour
 {
 
+    [Header("Board Variables")]
     public int column;
     public int row;
+    public int previousColumn;
+    public int previousRow;
     public int targetX;
     public int targetY;
     public bool isMatched = false;
+    
     private Board board;
     private GameObject otherDot;
     private Vector2 firstTouchPosition;
@@ -25,7 +29,8 @@ public class Dot : MonoBehaviour
         targetY = (int)transform.position.y;
         row = targetY;
         column = targetX;
-
+        previousRow = row;
+        previousColumn = column;
     }
 
     // Update is called once per frame
@@ -67,6 +72,25 @@ public class Dot : MonoBehaviour
         }
            
     }
+    
+    public IEnumerator CheckMoveCo()
+    {
+        yield return new WaitForSeconds(.5f);
+        if (otherDot != null)
+        {
+            if (!isMatched && !otherDot.GetComponent<Dot>().isMatched)
+            {
+                otherDot.GetComponent<Dot>().row = row;
+                otherDot.GetComponent<Dot>().column = column;
+                row = previousRow;
+                column = previousColumn;
+
+            }
+            otherDot = null;
+        }
+       
+       
+    }
 
     private void OnMouseDown()
     {
@@ -91,14 +115,14 @@ public class Dot : MonoBehaviour
 
     void MovePieces()
     {
-        if (IsRightSwipe())
+        if (swipeAngle > -45 && swipeAngle <= 45 && column < board.width-1)
         {
             //Right Swipe
             otherDot = board.allDots[column + 1, row];
             otherDot.GetComponent<Dot>().column -= 1;
             column += 1;
         }
-           else if (swipeAngle > -45 && swipeAngle <= 135 && row <board.height)
+        else if (swipeAngle > -45 && swipeAngle <= 135 && row <board.height-1)
         {
             //Up Swipe
             otherDot = board.allDots[column, row +1];
@@ -119,6 +143,8 @@ public class Dot : MonoBehaviour
             otherDot.GetComponent<Dot>().row += 1;
             row -= 1;
         }
+        StartCoroutine(CheckMoveCo());
+            
     }
 
     void FindMatches()
@@ -151,10 +177,10 @@ public class Dot : MonoBehaviour
     }
     
 
-    private bool IsRightSwipe()
-    {
-        return swipeAngle > -45 && swipeAngle <= 45 && column < board.width;
-    }
+    //private bool IsRightSwipe()
+    //{
+        //return swipeAngle > -45 && swipeAngle <= 45 && column < board.width-1;
+    //}
             
     
 }
